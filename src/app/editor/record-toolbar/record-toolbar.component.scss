@@ -1,0 +1,26 @@
+$green-sea: #16a085;
+$wet-asphalt: #34495e;
+
+.navbar-default {
+  background-color: $wet-asphalt;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+  margin-bottom: 0px;
+  width: 100%;
+  border-radius: 0;
+  border: 0;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.btn {
+  background-color: $green-sea;
+  border-color: $green-sea;
+  color: white;
+
+  &:hover,
+  &:active,
+  &:focus {
+    background-color: lighten($green-sea, 5%);
+    color: white;
+  }
+}

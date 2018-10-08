@@ -1,4 +1,6 @@
-# CdsRecordEditor
+# InvenioRecordEditorJS
+
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/topless/invenio-record-editor-js.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/topless/invenio-record-editor-js/alerts/)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.4.10.
 

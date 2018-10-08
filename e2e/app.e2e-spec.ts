@@ -1,6 +1,6 @@
 import { AppPage } from './app.po';
 
-describe('cds-record-editor App', () => {
+describe('invenio-record-editor-js App', () => {
   let page: AppPage;
 
   beforeEach(() => {
