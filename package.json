@@ -1,13 +1,22 @@
 {
   "name": "invenio-records-editor-js",
+  "description": "A generic json editor for invenio-records",
   "version": "0.0.1",
   "license": "MIT",
+  "author": {
+    "name": "CERN",
+    "email": "info@inveniosoftware.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/inveniosoftware/invenio-records-editor-js"
+  },
   "scripts": {
     "ng": "ng",
-    "dev:local": "ng serve",
+    "start": "ng serve",
     "dev:invenio": "ng build -op dist --prod --output-hashing none -w",
     "build": "ng build --prod --output-hashing none",
-    "test": "ng test",
+    "test": "ng test --watch=false",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
