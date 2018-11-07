@@ -1,7 +1,6 @@
 # invenio-records-editor-js
 
 [![Build Status](https://travis-ci.org/inveniosoftware/invenio-records-editor-js.svg?branch=master)](https://travis-ci.org/inveniosoftware/invenio-records-editor-js)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/inveniosoftware/invenio-record-editor-js.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/topless/invenio-record-editor-js/alerts/)
 
 This application is a wrapper for [ng2-json-editor](https://github.com/inveniosoftware-contrib/ng2-json-editor) and serves as a dependency for [invenio-records-editor](https://github.com/inveniosoftware/invenio-records-editor) a generic invenio module which allows users to edit invenio records.
 
