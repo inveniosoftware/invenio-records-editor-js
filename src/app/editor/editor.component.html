@@ -3,7 +3,7 @@
     <span *ngSwitchCase="true">
       <i class="fa fa-check-circle success" aria-hidden="true"></i>
       <a
-        href="{{item.getIn(['record', '$ref'])}}"
+        href="{{ item.getIn(['record', '$ref']) }}"
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -17,7 +17,10 @@
   </div>
 </ng-template>
 
-<app-record-toolbar (broadcast)="saveRecord($event)"></app-record-toolbar>
+<app-record-toolbar
+  (broadcast)="saveRecord($event)"
+  [name]="recordService.recordId ? 'Save' : 'Create'"
+></app-record-toolbar>
 
 <!--
   [(jsonPatches)]="editorData.patches"
@@ -25,7 +28,7 @@
 -->
 
 <json-editor
-  *ngIf="record && schema"
+  *ngIf="schema"
   [config]="config"
   [(record)]="record"
   [schema]="schema"

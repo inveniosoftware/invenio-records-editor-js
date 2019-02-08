@@ -4,6 +4,7 @@ import { cloneDeep } from 'lodash';
 import { JsonEditorConfig } from 'ng2-json-editor';
 import 'rxjs/add/observable/zip';
 import { environment } from '../../environments/environment';
+import { RecordMetadata } from '../shared/interfaces/record.model';
 import { InvenioConfigService } from '../shared/services/invenio-config/invenio-config.service';
 import { RecordService } from '../shared/services/record.service';
 
@@ -14,8 +15,8 @@ import { RecordService } from '../shared/services/record.service';
   providers: [],
 })
 export class EditorComponent implements OnInit {
-  record: object;
   schema: object;
+  record: RecordMetadata;
   config: JsonEditorConfig = environment.editorConfig;
 
   constructor(
@@ -23,12 +24,16 @@ export class EditorComponent implements OnInit {
     public recordService: RecordService,
     public invenioConfigService: InvenioConfigService
   ) {
-    this.config = { ...this.config, ...this.invenioConfigService.data.editor_config };
+    this.config = { ...this.config, ...this.invenioConfigService.data.editorConfig };
   }
 
   saveRecord(event) {
-    this.recordService.save(this.record);
+    if (this.recordService.recordId) {
+      this.recordService.save(this.record);
+    }
+    this.recordService.create(this.record);
   }
+
 
   ngOnInit() {
     this.route.data.subscribe(data => {

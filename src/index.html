@@ -17,13 +17,13 @@
 
   <body>
     <!-- The invenio-records-editor will render a field like this passing
-    the configuration.  -->
+    the configuration. We also need authorized_token input -->
     <input
       type="hidden"
       id="invenio-records-editor"
       data-config='{
-        "editor_config": {"isPreviewerHiddenOnStart": true},
-        "record_config": {
+        "editorConfig": {"isPreviewerHiddenOnStart": true},
+        "recordConfig": {
           "apiUrl": "https://127.0.0.1:5000/api/items/",
           "schema": "https://127.0.0.1:5000/api/schemas/items/item-v1.0.0.json"
         }

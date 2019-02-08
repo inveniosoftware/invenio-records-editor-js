@@ -20,10 +20,13 @@ export class RecordResolver implements Resolve<any> {
       return this.recordMockService.getMockData();
     }
     if ('rec_id' in route.params) {
-      return this.recordService.fetchData(
+      return this.recordService.getRecord(
         route.params.rec_id,
-        this.invenioConfigService.data.record_config
+        this.invenioConfigService.data.recordConfig
       );
     }
+    return this.recordService.getNewRecord(
+      this.invenioConfigService.data.recordConfig
+    );
   }
 }

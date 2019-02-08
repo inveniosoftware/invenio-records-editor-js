@@ -1,5 +1,7 @@
 export interface Record {
-  metadata?: {
-    $schema?: string;
-  };
+  metadata?: RecordMetadata;
+}
+
+export interface RecordMetadata {
+  $schema ?: string;
 }
