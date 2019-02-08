@@ -1,31 +1,45 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Headers, Http, RequestOptions } from '@angular/http';
+import { isEqual } from 'lodash';
 import { ToastrService } from 'ngx-toastr';
+import 'rxjs/add/observable/forkJoin';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
+import { EditorData, InvenioRecordConfig, PatchRequest, Record } from '../interfaces/';
 
 @Injectable()
 export class RecordService {
-  record_url: string;
+  record: Record;
+  record_id: number;
+  config: InvenioRecordConfig;
   constructor(private http: Http, private toaster: ToastrService) {}
 
-  /** Switching schema url to api  */
-  private convertToApi(url: string): string {
-    const separator = 'schemas/';
-    const urlParts = url.split(separator);
-    return `${urlParts[0]}api/${separator}${urlParts[1]}`;
+  private createPatch(new_record): Array<PatchRequest> {
+    const operations = [];
+    for (const prop of Object.keys(new_record)) {
+      if (!this.record.hasOwnProperty(prop)) {
+        operations.push({ op: 'add', path: `/${prop}`, value: new_record[prop] });
+        continue;
+      }
+      if (!isEqual(this.record[prop], new_record[prop])) {
+        operations.push({ op: 'replace', path: `/${prop}`, value: new_record[prop] });
+        continue;
+      }
+    }
+    return operations;
   }
 
-  public save(record) {
-    const token = document.getElementsByName('authorized_token');
-    const options = {
-      headers: new Headers({
-        Authorization: 'Bearer ' + token[0]['value'],
-        'Content-Type': 'application/json',
-      }),
-    };
-    this.http.put(this.record_url, record, options).subscribe(
+  public save(new_record) {
+    const token = document.getElementsByName('authorized_token')[0]['value'];
+    const headers = new Headers({
+      Authorization: 'Bearer ' + token,
+      'Content-Type': 'application/json-patch+json',
+    });
+    const options: RequestOptions = new RequestOptions({ headers: headers });
+    const body = this.createPatch(new_record);
+    this.http.patch(`${this.config.apiUrl}${this.record_id}`, body, options).subscribe(
       res => {
-        console.log(res);
+        this.record = <Record>res.json();
         this.toaster.success('Record saved successfully!');
       },
       err => {
@@ -35,20 +49,29 @@ export class RecordService {
     );
   }
 
-  public fetchData(url: string): Observable<any> {
-    this.record_url = url;
-    return this.http
-      .get(url)
-      .map((recordRes: any) => recordRes.json())
-      .flatMap((record: any) => {
-        return this.http
-          .get(this.convertToApi(record.metadata.$schema))
-          .map((schemaRes: any) => ({
-            record: record.metadata,
-            schema: schemaRes.json(),
-            problemMap: [],
-            patches: {},
-          }));
-      });
+  public fetchData(
+    record_id: number,
+    config: InvenioRecordConfig
+  ): Observable<EditorData> {
+    this.config = config;
+    this.record_id = record_id;
+    const headers = new Headers({
+      Accept: 'application/vnd.ils.refs+json',
+    });
+    const options: RequestOptions = new RequestOptions({ headers: headers });
+    return Observable.forkJoin([
+      this.http.get(config.schema, options),
+      this.http.get(`${config.apiUrl}${record_id}`, options),
+    ]).pipe(
+      map(([schema, record]) => {
+        this.record = record.json().metadata;
+        return {
+          schema: schema.json(),
+          record: this.record,
+          problemMap: {},
+          patches: [],
+        };
+      })
+    );
   }
 }

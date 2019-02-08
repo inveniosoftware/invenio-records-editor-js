@@ -1,22 +1,29 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-
-import { RecordService } from './record.service';
+import { EditorData } from '../../shared/interfaces';
+import { InvenioConfigService } from './invenio-config/invenio-config.service';
 import { RecordMockService } from './record.mock.service';
-import { EditorData } from '../../shared/interfaces/editor-data.model';
+import { RecordService } from './record.service';
+
 
 @Injectable()
 export class RecordResolver implements Resolve<any> {
   constructor(
     private recordService: RecordService,
-    private recordMockService: RecordMockService
+    private recordMockService: RecordMockService,
+    private invenioConfigService: InvenioConfigService
   ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<EditorData> {
-    if (!route.queryParams.url) {
+    if (route.params.type === 'demo') {
       return this.recordMockService.getMockData();
     }
-    return this.recordService.fetchData(route.queryParams.url);
+    if ('rec_id' in route.params) {
+      return this.recordService.fetchData(
+        route.params.rec_id,
+        this.invenioConfigService.data.record_config
+      );
+    }
   }
 }

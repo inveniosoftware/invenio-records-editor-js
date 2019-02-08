@@ -1,11 +1,11 @@
-import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 import { EditorComponent } from './editor/editor.component';
 import { RecordResolver } from './shared/services/record.resolver';
 
 const appRoutes: Routes = [
   {
-    path: '',
+    path: ':type/:rec_id',
     component: EditorComponent,
     resolve: { editorData: RecordResolver },
   },
