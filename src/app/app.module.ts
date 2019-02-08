@@ -1,17 +1,14 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
-import { RouterModule } from '@angular/router';
+import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
 import { ToastrModule } from 'ngx-toastr';
-
-import { SHARED_SERVICES } from './shared/services';
-
-import { AppRouter } from './app.router';
-import { SharedModule } from './shared';
-import { EditorModule } from './editor/editor.module';
-
 import { AppComponent } from './app.component';
+import { AppRouter } from './app.router';
+import { EditorModule } from './editor/editor.module';
+import { SharedModule } from './shared';
+import { SHARED_SERVICES } from './shared/services';
 
 @NgModule({
   declarations: [AppComponent],

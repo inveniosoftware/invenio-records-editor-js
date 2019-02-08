@@ -1,20 +1,34 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>InvenioRecordEditorJS</title>
-    <base href="/">
+    <base href="/" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-      rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
-      crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+      integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+      crossorigin="anonymous"
+    />
   </head>
 
   <body>
+    <!-- The invenio-records-editor will render a field like this passing
+    the configuration.  -->
+    <input
+      type="hidden"
+      id="invenio-records-editor"
+      data-config='{
+        "editor_config": {"isPreviewerHiddenOnStart": true},
+        "record_config": {
+          "apiUrl": "https://127.0.0.1:5000/api/items/",
+          "schema": "https://127.0.0.1:5000/api/schemas/items/item-v1.0.0.json"
+        }
+      }'
+    />
     <app-root></app-root>
   </body>
-
 </html>

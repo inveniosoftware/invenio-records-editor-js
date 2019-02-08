@@ -1,10 +1,11 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import 'rxjs/add/observable/zip';
-
-import { RecordService } from '../shared/services/record.service';
+import { cloneDeep } from 'lodash';
 import { JsonEditorConfig } from 'ng2-json-editor';
+import 'rxjs/add/observable/zip';
 import { environment } from '../../environments/environment';
+import { InvenioConfigService } from '../shared/services/invenio-config/invenio-config.service';
+import { RecordService } from '../shared/services/record.service';
 
 @Component({
   selector: 'app-editor',
@@ -15,9 +16,15 @@ import { environment } from '../../environments/environment';
 export class EditorComponent implements OnInit {
   record: object;
   schema: object;
-  readonly config: JsonEditorConfig = environment.editorConfig;
+  config: JsonEditorConfig = environment.editorConfig;
 
-  constructor(private route: ActivatedRoute, public recordService: RecordService) {}
+  constructor(
+    private route: ActivatedRoute,
+    public recordService: RecordService,
+    public invenioConfigService: InvenioConfigService
+  ) {
+    this.config = { ...this.config, ...this.invenioConfigService.data.editor_config };
+  }
 
   saveRecord(event) {
     this.recordService.save(this.record);
@@ -25,7 +32,7 @@ export class EditorComponent implements OnInit {
 
   ngOnInit() {
     this.route.data.subscribe(data => {
-      this.record = data.editorData.record;
+      this.record = cloneDeep(data.editorData.record);
       this.schema = data.editorData.schema;
       // this.patches = data.editorData.patches;
       // this.problemMap = data.editorData.problemMap;
