@@ -4,14 +4,14 @@ import { isEqual } from 'lodash';
 import { ToastrService } from 'ngx-toastr';
 import 'rxjs/add/observable/forkJoin';
 import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators/map';
 import { EditorData, InvenioRecordConfig, PatchRequest, Record } from '../interfaces/';
 
 @Injectable()
 export class RecordService {
-  record: Record;
-  record_id: number;
+  record: Record = {};
   config: InvenioRecordConfig;
+  recordId: number;
+  schema: object;
   constructor(private http: Http, private toaster: ToastrService) {}
 
   private createPatch(new_record): Array<PatchRequest> {
@@ -29,49 +29,84 @@ export class RecordService {
     return operations;
   }
 
-  public save(new_record) {
-    const token = document.getElementsByName('authorized_token')[0]['value'];
+  getOptions(): RequestOptions {
+    // TODO: Headers are ils specific load them from this.config
+    let token = '';
+    const auth_elem = document.getElementsByName('authorized_token')[0]
+    if (auth_elem) {
+      token = auth_elem[0]['value'];
+    }
     const headers = new Headers({
+      Accept: 'application/vnd.ils.refs+json',
       Authorization: 'Bearer ' + token,
       'Content-Type': 'application/json-patch+json',
     });
     const options: RequestOptions = new RequestOptions({ headers: headers });
-    const body = this.createPatch(new_record);
-    this.http.patch(`${this.config.apiUrl}${this.record_id}`, body, options).subscribe(
-      res => {
-        this.record = <Record>res.json();
-        this.toaster.success('Record saved successfully!');
-      },
-      err => {
-        console.error('Error: ', err);
-        this.toaster.error(err, 'Failed to save the record!');
-      }
-    );
+    return options;
   }
 
-  public fetchData(
-    record_id: number,
+  public save(new_record) {
+    const body = this.createPatch(new_record);
+    this.http
+      .patch(`${this.config.apiUrl}${this.recordId}`, body, this.getOptions())
+      .subscribe(
+        res => {
+          this.record = <Record>res.json();
+          this.toaster.success('Record saved successfully!');
+        },
+        err => {
+          console.error('Error: ', err);
+          this.toaster.error(err, 'Failed to save the record!');
+        }
+      );
+  }
+
+  editorData(): EditorData {
+    return {
+      schema: this.schema,
+      record: this.record,
+      problemMap: {},
+      patches: [],
+    };
+  }
+
+  public getRecord(
+    recordId: number,
     config: InvenioRecordConfig
   ): Observable<EditorData> {
     this.config = config;
-    this.record_id = record_id;
-    const headers = new Headers({
-      Accept: 'application/vnd.ils.refs+json',
-    });
-    const options: RequestOptions = new RequestOptions({ headers: headers });
+    this.recordId = recordId;
+
     return Observable.forkJoin([
-      this.http.get(config.schema, options),
-      this.http.get(`${config.apiUrl}${record_id}`, options),
-    ]).pipe(
-      map(([schema, record]) => {
-        this.record = record.json().metadata;
-        return {
-          schema: schema.json(),
-          record: this.record,
-          problemMap: {},
-          patches: [],
-        };
-      })
-    );
+      this.http.get(config.schema, this.getOptions()),
+      this.http.get(`${config.apiUrl}${recordId}`, this.getOptions()),
+    ]).map(([schema, record]) => {
+      this.record = record.json().metadata;
+      this.schema = schema.json();
+      return this.editorData();
+    });
+  }
+
+  public getNewRecord(config: InvenioRecordConfig): Observable<EditorData> {
+    this.config = config;
+    return this.http.get(config.schema, this.getOptions()).map(schema => {
+      this.schema = schema.json();
+      return this.editorData();
+    });
+  }
+
+  public create(new_record) {
+    return this.http
+      .post(`${this.config.apiUrl}`, new_record, this.getOptions())
+      .subscribe(
+        res => {
+          this.record = <Record>res.json();
+          this.toaster.success('Record saved successfully!');
+        },
+        err => {
+          console.error('Error: ', err);
+          this.toaster.error(err, 'Failed to save the record!');
+        }
+      );
   }
 }

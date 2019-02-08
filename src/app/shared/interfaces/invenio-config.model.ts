@@ -7,6 +7,6 @@ export interface InvenioRecordConfig {
 
 // NOTE: Maybe should be renamed to ILS config since its specific
 export interface InvenioConfig {
-  editor_config: JsonEditorConfig;
-  record_config: InvenioRecordConfig;
+  editorConfig: JsonEditorConfig;
+  recordConfig: InvenioRecordConfig;
 }

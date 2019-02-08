@@ -9,6 +9,11 @@ const appRoutes: Routes = [
     component: EditorComponent,
     resolve: { editorData: RecordResolver },
   },
+  {
+    path: ':type',
+    component: EditorComponent,
+    resolve: { editorData: RecordResolver },
+  },
 ];
 
 @NgModule({
