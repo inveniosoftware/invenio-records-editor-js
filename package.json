@@ -1,7 +1,7 @@
 {
   "name": "@inveniosoftware/invenio-records-editor-js",
   "description": "A generic json editor for invenio-records",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "author": {
     "name": "CERN",
