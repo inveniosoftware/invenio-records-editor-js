@@ -34,7 +34,7 @@ export class RecordService {
     let token = '';
     const auth_elem = document.getElementsByName('authorized_token')[0]
     if (auth_elem) {
-      token = auth_elem[0]['value'];
+      token = auth_elem['value'];
     }
     const headers = new Headers({
       Accept: 'application/vnd.ils.refs+json',

@@ -30,8 +30,9 @@ export class EditorComponent implements OnInit {
   saveRecord(event) {
     if (this.recordService.recordId) {
       this.recordService.save(this.record);
+    } else {
+      this.recordService.create(this.record);
     }
-    this.recordService.create(this.record);
   }
 
 
