@@ -14,7 +14,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "dev:invenio": "ng build -op dist --prod --output-hashing none -w",
+    "dev:invenio": "ng build -op dist --output-hashing none --watch",
     "build": "ng build --prod --output-hashing none",
     "test": "ng test --watch=false",
     "lint": "ng lint",
@@ -35,7 +35,7 @@
     "@angular/router": "^4.2.4",
     "bootstrap-sass": "^3.3.7",
     "core-js": "^2.4.1",
-    "ng2-json-editor": "^0.25.11",
+    "ng2-json-editor": "^0.25.12",
     "lodash": "^4.17.11",
     "ngx-bootstrap": "^2.0.5",
     "ngx-toastr": "^6.4.1-beta.0",

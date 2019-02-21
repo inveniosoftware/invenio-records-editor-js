@@ -5,7 +5,6 @@ export interface InvenioRecordConfig {
   schema: string;
 }
 
-// NOTE: Maybe should be renamed to ILS config since its specific
 export interface InvenioConfig {
   editorConfig: JsonEditorConfig;
   recordConfig: InvenioRecordConfig;

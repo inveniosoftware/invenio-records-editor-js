@@ -29,26 +29,30 @@ export class RecordService {
     return operations;
   }
 
-  getOptions(): RequestOptions {
-    // TODO: Headers are ils specific load them from this.config
-    let token = '';
-    const auth_elem = document.getElementsByName('authorized_token')[0]
-    if (auth_elem) {
-      token = auth_elem['value'];
-    }
+  getOptions(extraHeaders = new Map<string, string>()): RequestOptions {
     const headers = new Headers({
-      Accept: 'application/vnd.ils.refs+json',
-      Authorization: 'Bearer ' + token,
-      'Content-Type': 'application/json-patch+json',
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
     });
+    // add/replace extra headers
+    extraHeaders.forEach((value: string, key: string) => {
+      headers.set(key, value);
+    });
+    // add Authorization Bearer token header if available
+    const authElem = document.getElementsByName('authorized_token')[0]
+    if (authElem) {
+      headers.set('Authorization', 'Bearer ' + authElem['value'])
+    }
     const options: RequestOptions = new RequestOptions({ headers: headers });
     return options;
   }
 
   public save(new_record) {
+    const extraHeaders = new Map<string, string>();
+    extraHeaders.set('Content-Type', 'application/json-patch+json');
     const body = this.createPatch(new_record);
     this.http
-      .patch(`${this.config.apiUrl}${this.recordId}`, body, this.getOptions())
+      .patch(`${this.config.apiUrl}${this.recordId}`, body, this.getOptions(extraHeaders))
       .subscribe(
         res => {
           this.record = <Record>res.json();
@@ -101,11 +105,11 @@ export class RecordService {
       .subscribe(
         res => {
           this.record = <Record>res.json();
-          this.toaster.success('Record saved successfully!');
+          this.toaster.success('Record created successfully!');
         },
         err => {
           console.error('Error: ', err);
-          this.toaster.error(err, 'Failed to save the record!');
+          this.toaster.error(err, 'Failed to create the record!');
         }
       );
   }
